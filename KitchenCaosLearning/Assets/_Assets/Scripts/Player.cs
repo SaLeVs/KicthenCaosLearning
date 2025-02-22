@@ -6,10 +6,16 @@ public class Player : MonoBehaviour
 
     private float moveSpeed = 5f;
     private bool isWalking;
+    private Vector3 lastInteractDir;
 
     private void Update()
     {
-        
+        HandleMovement();
+        HandleInteractions();
+    }
+
+    private void HandleMovement()
+    {
         Vector2 inputVector = gameInput.GetMovementVectorNormalized();
 
         Vector3 moveDir = new Vector3(inputVector.x, 0f, inputVector.y);
@@ -43,8 +49,8 @@ public class Player : MonoBehaviour
                 }
             }
         }
-        
-        if(canMove)
+
+        if (canMove)
         {
             transform.position += moveDir * moveDistance;
         }
@@ -59,4 +65,32 @@ public class Player : MonoBehaviour
     {
         return isWalking;
     }
+
+    private void HandleInteractions()
+    {
+        Vector2 inputVector = gameInput.GetMovementVectorNormalized();
+        Vector3 moveDir = new Vector3(inputVector.x, 0f, inputVector.y);
+
+        float interactDistance = 2f;
+        // Physics.Raycast(transform.position, moveDir, out RaycastHit raycastHit, interactDistance); // we can define here directly or define above (raycastHit)
+
+        if(moveDir != Vector3.zero)
+        {
+            lastInteractDir = moveDir;
+        }
+
+        if (Physics.Raycast(transform.position, lastInteractDir, out RaycastHit raycastHit, interactDistance))
+        {
+            if(raycastHit.transform.TryGetComponent(out ClearCounter clearCounter))
+            {
+                // Has clear counter
+                clearCounter.Interact();
+            }  
+        }
+        else
+        {
+            Debug.Log("Nothing to interact with");
+        }
+    }
+
 }
