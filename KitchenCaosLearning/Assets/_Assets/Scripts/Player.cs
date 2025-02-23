@@ -3,26 +3,46 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+
+    public static Player Instance { get; private set; }
+
     [SerializeField] private GameInput gameInput;
 
     private float moveSpeed = 5f;
     private bool isWalking;
     private Vector3 lastInteractDir;
+    private ClearCounter selectedCounter;
 
+    public event EventHandler<OnSelectedCounterChangedEventArgs> OnSelectedCounterChanged;
+    public class OnSelectedCounterChangedEventArgs : EventArgs
+    {
+        public ClearCounter _selectedCounter;
+    }
+
+    private void Awake()
+    {
+        if(Instance != null)
+        {
+            Debug.Log("Error");
+        }
+        else
+        {
+            Instance = this;
+        }
+            
+    }
 
     private void Start()
     {
         gameInput.OnInteractAction += GameInput_OnInteractAction;
     }
 
-   
-
     private void Update()
     {
         HandleMovement();
+        HandleInteractions();
     }
 
-    
     private void HandleMovement()
     {
         Vector2 inputVector = gameInput.GetMovementVectorNormalized();
@@ -75,7 +95,7 @@ public class Player : MonoBehaviour
         return isWalking;
     }
 
-    private void GameInput_OnInteractAction(object sender, EventArgs e)
+    private void HandleInteractions()
     {
         Vector2 inputVector = gameInput.GetMovementVectorNormalized();
         Vector3 moveDir = new Vector3(inputVector.x, 0f, inputVector.y);
@@ -92,14 +112,33 @@ public class Player : MonoBehaviour
         {
             if (raycastHit.transform.TryGetComponent(out ClearCounter clearCounter))
             {
-                // Has clear counter
-                clearCounter.Interact();
+                if(clearCounter != selectedCounter)
+                {
+                    SetSelectedCounter(clearCounter);
+                }
+            }
+            else
+            {
+                SetSelectedCounter(null);
             }
         }
         else
         {
-            Debug.Log("Nothing to interact with");
+            SetSelectedCounter(null);
         }
     }
 
+    private void GameInput_OnInteractAction(object sender, EventArgs e)
+    {
+        if(selectedCounter != null)
+        {
+            selectedCounter.Interact();
+        }
+    }
+
+    private void SetSelectedCounter(ClearCounter selectedCounter)
+    {
+        this.selectedCounter = selectedCounter;
+        OnSelectedCounterChanged?.Invoke(this, new OnSelectedCounterChangedEventArgs { _selectedCounter = selectedCounter });
+    }
 }
