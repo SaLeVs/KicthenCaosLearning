@@ -96,6 +96,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 1546428816837022289, guid: 9a628179ec45fa74c80fc01525d81349, type: 3}
+      propertyPath: counterTopPoint
+      value: 
+      objectReference: {fileID: 5754738700805131178}
+    - target: {fileID: 1546428816837022289, guid: 9a628179ec45fa74c80fc01525d81349, type: 3}
       propertyPath: kitchenObjectSO
       value: 
       objectReference: {fileID: 11400000, guid: f3764f81673a5b443b4bd2681bb63559, type: 2}
@@ -160,6 +164,11 @@ PrefabInstance:
       addedObject: {fileID: 5811947688692322758}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9a628179ec45fa74c80fc01525d81349, type: 3}
+--- !u!4 &5754738700805131178 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 9078070334307742116, guid: 9a628179ec45fa74c80fc01525d81349, type: 3}
+  m_PrefabInstance: {fileID: 3613919369178020366}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &7751134942537519760 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6464539777979082910, guid: 9a628179ec45fa74c80fc01525d81349, type: 3}
